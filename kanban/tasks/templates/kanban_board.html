@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kanban Board</title>
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <header class="header">
+        <h1>Kanban Board: Exportcertificering</h1>
+        <div class="user-info">
+            <!-- Display username -->
+            <span class="user-name">{{ user.username }}</span>
+            
+            <!-- Display group if available -->
+            {% if user.groups.all %}
+                <span class="user-group">(
+                    {% for group in user.groups.all %}
+                        {{ group.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                )</span>
+            {% endif %}
+            
+            <!-- Logout button -->
+            <a href="{% url 'logout' %}" class="logout-icon" title="Logout"><i class="fa fa-sign-out"></i></a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="row">
+            <!-- Expertise Column -->
+            <div class="col-md-4">
+                <h3>Expertise</h3>
+                <ul class="list-group">
+                    {% for task in expertise_tasks %}
+                        <li class="list-group-item">
+                            {{ task.title }}
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item">Geen taken</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Contentbeheer Column -->
+            <div class="col-md-4">
+                <h3>Contentbeheer</h3>
+                <ul class="list-group">
+                    {% for task in contentbeheer_tasks %}
+                        <li class="list-group-item">
+                            {{ task.title }}
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item">Geen taken</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Notificeren Column -->
+            <div class="col-md-4">
+                <h3>Notificeren</h3>
+                <ul class="list-group">
+                    {% for task in notificeren_tasks %}
+                        <li class="list-group-item">
+                            {{ task.title }}
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item">Geen taken</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

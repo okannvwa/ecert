@@ -1,0 +1,35 @@
+/* main.css */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background-color: #01689b;
+    color: white;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-name {
+    font-weight: bold;
+}
+
+.user-group {
+    color: #bbb;
+    font-size: 0.9em;
+}
+
+.logout-icon {
+    margin-left: 12px;
+    text-decoration: none;
+    color: #fff; /* Red color for logout */
+}
+
+.logout-icon:hover {
+    text-decoration: underline;
+    color: #fff;
+}
