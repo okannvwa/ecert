@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Task, TaskStatus
-from django.contrib.auth.decorators import login_required
+from .forms import TaskForm
 
 @login_required
 def kanban_board(request):
@@ -16,3 +18,40 @@ def kanban_board(request):
     }
 
     return render(request, 'kanban_board.html', context)
+
+@login_required
+def add_task(request):
+    if request.method == 'POST':
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('kanban_board')
+    else:
+        form = TaskForm()
+    return render(request, 'add_task.html', {'form': form})
+
+@login_required
+def view_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    return render(request, 'view_task.html', {'task': task})
+
+@login_required
+def edit_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    if request.method == 'POST':
+        form = TaskForm(request.POST, instance=task)
+        if form.is_valid():
+            form.save()
+            return redirect('kanban_board')
+    else:
+        form = TaskForm(instance=task)
+    return render(request, 'edit_task.html', {'form': form, 'task': task})
+
+@login_required
+def delete_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    if request.method == 'POST':
+        task.delete()
+        return redirect('kanban_board')
+    return render(request, 'delete_task.html', {'task': task})
+
