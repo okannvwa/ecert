@@ -18,7 +18,7 @@ class SectorChoices(models.TextChoices):
     # Add more sectors as needed
 
 class Task(models.Model):
-    country = models.CharField(max_length=100, default="Unknown")
+    country = models.CharField(max_length=100, default="")
     sector = models.CharField(
         max_length=20,
         choices=SectorChoices.choices,

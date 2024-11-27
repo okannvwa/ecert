@@ -15,5 +15,6 @@ urlpatterns = [
     path('archive/', views.archive, name='archive'),
     path('<int:task_id>/archive/', views.archive_task, name='archive_task'),
     path('task/<int:task_id>/unarchive/', views.unarchive_task, name='unarchive_task'),
+    path('<int:task_id>/move/<str:direction>/', views.move_task, name='move_task'),
     path('', kanban_board, name='kanban_board')
 ]

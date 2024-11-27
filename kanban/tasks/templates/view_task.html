@@ -33,6 +33,15 @@
         </form>
         <br>
         <br>
+        {% if task.column == "expertise" %}
+            <a href="{% url 'move_task' task.id 'next' %}" class="btn btn-primary">Move to Contentbeheer</a>
+        {% elif task.column == "contentbeheer" %}
+            <a href="{% url 'move_task' task.id 'previous' %}" class="btn btn-secondary">Move to Expertise</a>
+            <a href="{% url 'move_task' task.id 'next' %}" class="btn btn-primary">Move to Notificeren</a>
+        {% elif task.column == "notificeren" %}
+            <a href="{% url 'move_task' task.id 'previous' %}" class="btn btn-secondary">Move to Contentbeheer</a>
+        {% endif %}
+        <br><br>
         <a href="{% url 'kanban_board' %}" class="btn btn-secondary">Back to Homescreen</a>
     {% endif %}
 

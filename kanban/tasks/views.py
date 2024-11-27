@@ -27,11 +27,9 @@ def add_task(request):
         form = TaskForm(request.POST)
         if form.is_valid():
             task = form.save(commit=False)
-            task.assigned_employee = None
+            task.column = ColumnStatus.EXPERTISE # Tasks always start in Expertise
             task.save()
             return redirect('kanban_board')
-        else:
-            print(form.errors)  # Debugging: Print form errors to check validation issues
     else:
         form = TaskForm()
     return render(request, 'task_form.html', {'form': form})
@@ -41,10 +39,11 @@ def edit_task(request, task_id):
     if request.method == 'POST':
         form = TaskForm(request.POST, instance=task)
         if form.is_valid():
-            task = form.save(commit=False)
-            if task.column_status != request.POST.get('column'):
-                task.assigned_employee = None  # Reset assigned employee on column change
-            task.save()
+            updated_task = form.save(commit=False)
+            # Controleer of de kolom is gewijzigd
+            if updated_task.column != task.column:
+                updated_task.assigned_employee = None  # Reset medewerker als de kolom verandert
+            updated_task.save()
             return redirect('kanban_board')
     else:
         form = TaskForm(instance=task)
@@ -70,4 +69,25 @@ def unarchive_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     task.archived = False
     task.save()
+    return redirect('kanban_board')
+
+def move_task(request, task_id, direction):
+    task = get_object_or_404(Task, id=task_id)
+
+    if direction == 'next':
+        if task.column == ColumnStatus.EXPERTISE:
+            task.column = ColumnStatus.CONTENTBEHEER
+        elif task.column == ColumnStatus.CONTENTBEHEER:
+            task.column = ColumnStatus.NOTIFICEREN
+    elif direction == 'previous':
+        if task.column == ColumnStatus.CONTENTBEHEER:
+            task.column = ColumnStatus.EXPERTISE
+        elif task.column == ColumnStatus.NOTIFICEREN:
+            task.column = ColumnStatus.CONTENTBEHEER
+
+    # Reset the assigned employee when moving between columns
+    task.assigned_employee = None
+    task.save()
+
+    # Redirect to the kanban board after the move
     return redirect('kanban_board')
