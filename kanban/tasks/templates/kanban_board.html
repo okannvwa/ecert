@@ -6,14 +6,27 @@
 
     <div class="container">
         <div class="row">
+            <!-- Settings Column -->
+            <div class="col-lg-3 mt-3">
+                <h3>Instellingen</h3>
+                <a href="{% url 'add_task' %}" class="btn btn-primary mb-3"><i class="fa fa-plus-circle"></i>  Nieuwe taak</a>
+                <br>
+                <a href="{% url 'archive' %}" class="btn btn-secondary mb-3"><i class="fa fa-folder"></i> Archief</a>
+            </div>
+
             <!-- Expertise Column -->
-            <div class="col-md-4">
-                <h3>Expertise <a href="{% url 'add_task' %}"><i class="fa fa-plus-circle"></i></a></h3>
-                <ul class="list-group">
+            <div class="col-lg-3 mt-3">
+                <h3>Expertise</h3>
+                <ul class="list-group task-column">
                     {% for task in expertise_tasks %}
+                    <a href="{% url 'view_task' task.id %}" class="task">
                         <li class="list-group-item">
-                            <a href="{% url 'view_task' task.id %}">{{ task.title }}</a>
+                            <strong>Country:</strong> {{ task.country }}<br>
+                            <strong>Sector:</strong> {{ task.sector }}<br>
+                            <!-- <strong>Status:</strong> {{ task.get_status_display }}<br>
+                            <strong>Assigned Employee:</strong> {{ task.assigned_employee }} -->
                         </li>
+                    </a>
                     {% empty %}
                         <li class="list-group-item">Geen taken</li>
                     {% endfor %}
@@ -21,13 +34,18 @@
             </div>
 
             <!-- Contentbeheer Column -->
-            <div class="col-md-4">
+            <div class="col-lg-3 mt-3">
                 <h3>Contentbeheer</h3>
                 <ul class="list-group">
                     {% for task in contentbeheer_tasks %}
+                    <a href="{% url 'view_task' task.id %}" class="task">
                         <li class="list-group-item">
-                            <a href="{% url 'view_task' task.id %}">{{ task.title }}</a>
+                            <strong>Country:</strong> {{ task.country }}<br>
+                            <strong>Sector:</strong> {{ task.sector }}<br>
+                            <!-- <strong>Status:</strong> {{ task.get_status_display }}<br>
+                            <strong>Assigned Employee:</strong> {{ task.assigned_employee }} -->
                         </li>
+                    </a>
                     {% empty %}
                         <li class="list-group-item">Geen taken</li>
                     {% endfor %}
@@ -35,13 +53,18 @@
             </div>
 
             <!-- Notificeren Column -->
-            <div class="col-md-4">
+            <div class="col-lg-3 mt-3">
                 <h3>Notificeren</h3>
                 <ul class="list-group">
                     {% for task in notificeren_tasks %}
+                    <a href="{% url 'view_task' task.id %}" class="task">
                         <li class="list-group-item">
-                            <a href="{% url 'view_task' task.id %}">{{ task.title }}</a>
+                            <strong>Country:</strong> {{ task.country }}<br>
+                            <strong>Sector:</strong> {{ task.sector }}<br>
+                            <!-- <strong>Status:</strong> {{ task.get_status_display }}<br>
+                            <strong>Assigned Employee:</strong> {{ task.assigned_employee }} -->
                         </li>
+                    </a>
                     {% empty %}
                         <li class="list-group-item">Geen taken</li>
                     {% endfor %}

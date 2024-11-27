@@ -46,3 +46,19 @@
     background-color: #5a6268;
     color: white;
 }
+
+.task-column{
+    background-color: #01689b;
+}
+
+.task{
+    margin: 5px;
+    margin-bottom: 1em;
+    color: #000;
+}
+
+.task :hover{
+    background-color: #007bff;
+    text-decoration: none;
+    color: #fff;
+}

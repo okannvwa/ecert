@@ -1,14 +1,39 @@
 {% extends 'base.html' %}
 
-{% block title %}Taak Bekijken{% endblock %}
+{% block title %}Task Details{% endblock %}
 
 {% block content %}
-    <h2>{{ task.title }}</h2>
-    <p>{{ task.description }}</p>
-    <p>Status: {{ task.get_status_display }}</p>
-    <a href="{% url 'edit_task' task.id %}" class="btn btn-primary">Edit</a>
-    <a href="{% url 'delete_task' task.id %}" class="btn btn-danger">Delete</a>
-    <br>
-    <br>
-    <a href="{% url 'kanban_board' %}" class="btn btn-secondary">Terug naar Hoofdscherm</a>
+    <h2>Task Details</h2>
+    <p><strong>Country:</strong> {{ task.country }}</p>
+    <p><strong>Sector:</strong> {{ task.sector }}</p>
+    <p><strong>Status:</strong> {{ task.get_status_display }}</p>
+    <p><strong>Column:</strong> {{ task.get_column_display }}</p>
+    <p><strong>Assigned Employee:</strong> {{ task.assigned_employee }}</p>
+    <p><strong>Source:</strong> {{ task.source }}</p>
+    <p><strong>Coverages:</strong> {{ task.coverages }}</p>
+
+    {% if task.archived %}
+        <form action="{% url 'unarchive_task' task.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Unarchive Task</button>
+        </form>
+
+        <form action="{% url 'delete_task' task.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete Task</button>
+        </form>
+        <br>
+        <br>
+        <a href="{% url 'archive' %}" class="btn btn-secondary">Back to Archive</a>
+    {% else %}
+        <a href="{% url 'edit_task' task.id %}" class="btn btn-primary">Edit</a>
+        <form action="{% url 'archive_task' task.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-warning">Archive Task</button>
+        </form>
+        <br>
+        <br>
+        <a href="{% url 'kanban_board' %}" class="btn btn-secondary">Back to Homescreen</a>
+    {% endif %}
+
 {% endblock %}
