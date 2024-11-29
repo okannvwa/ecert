@@ -7,12 +7,39 @@
     <div class="container">
         <div class="row">
             <!-- Settings Column -->
-            <div class="col-lg-3 mt-3 flexbox">
+            <div class="col-lg-3 mt-3">
                 <h3>Instellingen</h3>
                 <div class="align-items-end settings-column p-3">
+                    <!-- Button to Create New Task -->
                     <a href="{% url 'add_task' %}" class="btn btn-primary mb-3"><i class="fa fa-plus-circle"></i> Nieuwe taak</a>
                     <br>
+                    
+                    <!-- Button to View Archive -->
                     <a href="{% url 'archive' %}" class="btn btn-secondary mb-3"><i class="fa fa-folder"></i> Archief</a>
+                    <br>
+                    
+                    <!-- Form for Sector Filtering -->
+                    <form method="get" class="form-inline mb-3">
+                        <label for="sector" class="mr-2">Filter op sector:</label>
+                        <select name="sector" id="sector" class="form-control mb-2">
+                            <option value="">Alle sectoren</option>
+                            {% for sector in sector_choices %}
+                                <option value="{{ sector }}" {% if sector == selected_sector %}selected{% endif %}>
+                                    {{ sector|title }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn btn-primary w-100">Toepassen</button>
+                    </form>
+                    
+                    <!-- Button to Show Only Assigned Tasks -->
+                    <form method="get" class="mb-3">
+                        <input type="hidden" name="my_tasks" value="true">
+                        <button type="submit" class="btn btn-info w-100">Toon mijn taken</button>
+                    </form>
+                    
+                    <!-- Button to Clear Filters -->
+                    <a href="{% url 'kanban_board' %}" class="btn btn-secondary w-100">Filters wissen</a>
                 </div>
             </div>
 
@@ -26,7 +53,8 @@
                             <strong>Land:</strong> {{ task.country }}<br>
                             <strong>Sector:</strong> {{ task.sector }}<br>
                             <strong>Status:</strong> {{ task.get_status_display }}<br>
-                            <strong>Medewerker:</strong> {% if task.assigned_employee != None %} {{ task.assigned_employee }} {% else %} ... {% endif %}
+                            <strong>Medewerker:</strong> {% if task.assigned_employee != None %} {{ task.assigned_employee }} {% endif %}<br>
+                            <strong>Prio:</strong> {{ task.priority }}
                         </li>
                     </a>
                     {% empty %}
@@ -45,7 +73,8 @@
                             <strong>Land:</strong> {{ task.country }}<br>
                             <strong>Sector:</strong> {{ task.sector }}<br>
                             <strong>Status:</strong> {{ task.get_status_display }}<br>
-                            <strong>Medewerker:</strong> {% if task.assigned_employee != None %} {{ task.assigned_employee }} {% else %} ... {% endif %}
+                            <strong>Medewerker:</strong> {% if task.assigned_employee != None %} {{ task.assigned_employee }} {% endif %}<br>
+                            <strong>Prio:</strong> {{ task.priority }}
                         </li>
                     </a>
                     {% empty %}
@@ -64,7 +93,8 @@
                             <strong>Land:</strong> {{ task.country }}<br>
                             <strong>Sector:</strong> {{ task.sector }}<br>
                             <strong>Status:</strong> {{ task.get_status_display }}<br>
-                            <strong>Medewerker:</strong> {% if task.assigned_employee != None %} {{ task.assigned_employee }} {% else %} ... {% endif %}
+                            <strong>Medewerker:</strong> {% if task.assigned_employee != None %} {{ task.assigned_employee }} {% endif %}<br>
+                            <strong>Prio:</strong> {{ task.priority }}
                         </li>
                     </a>
                     {% empty %}

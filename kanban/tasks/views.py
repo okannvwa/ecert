@@ -1,21 +1,54 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Task, TaskStatus, ColumnStatus
+from .models import Task, TaskStatus, ColumnStatus, PriorityChoices
 from .forms import TaskForm
+from django.db.models import Case, When, Value, IntegerField
 
-@login_required
 def kanban_board(request):
-    expertise_tasks = Task.objects.filter(column=ColumnStatus.EXPERTISE, archived=False)
-    contentbeheer_tasks = Task.objects.filter(column=ColumnStatus.CONTENTBEHEER, archived=False)
-    notificeren_tasks = Task.objects.filter(column=ColumnStatus.NOTIFICEREN, archived=False)
-    
+    # Get filter options from GET parameters
+    sector_filter = request.GET.get('sector')
+    my_tasks_only = request.GET.get('my_tasks', False)
+
+    # Base query for tasks (exclude archived)
+    base_query = Task.objects.filter(archived=False)
+
+    # Apply filters
+    if sector_filter:
+        base_query = base_query.filter(sector=sector_filter)
+    if my_tasks_only == 'true':
+        base_query = base_query.filter(assigned_employee=request.user)
+
+    # Custom priority ordering (High > Medium > Low)
+    priority_order = Case(
+        When(priority=PriorityChoices.HIGH, then=Value(1)),
+        When(priority=PriorityChoices.MEDIUM, then=Value(2)),
+        When(priority=PriorityChoices.LOW, then=Value(3)),
+        output_field=IntegerField()
+    )
+
+    # Order tasks by priority
+    ordered_tasks = base_query.annotate(priority_order=priority_order).order_by('priority_order')
+
+    # Split tasks into columns
+    expertise_tasks = ordered_tasks.filter(column=ColumnStatus.EXPERTISE)
+    contentbeheer_tasks = ordered_tasks.filter(column=ColumnStatus.CONTENTBEHEER)
+    notificeren_tasks = ordered_tasks.filter(column=ColumnStatus.NOTIFICEREN)
+
+    # Get distinct sector options for dropdown
+    sector_choices = Task.objects.values_list('sector', flat=True).distinct()
+
     context = {
         'expertise_tasks': expertise_tasks,
         'contentbeheer_tasks': contentbeheer_tasks,
         'notificeren_tasks': notificeren_tasks,
+        'sector_choices': sector_choices,
+        'selected_sector': sector_filter,
+        'my_tasks_only': my_tasks_only,
     }
     return render(request, 'kanban_board.html', context)
+
+
 
 @login_required
 def view_task(request, task_id):

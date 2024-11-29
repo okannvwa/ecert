@@ -7,7 +7,7 @@ class TaskForm(forms.ModelForm):
         exclude = ['archived', 'created_at', 'column']
         fields = [
             'country', 'sector', 'status',
-            'priority', 'source', 'coverages'
+            'priority', 'source', 'coverages', 'assigned_employee'
         ]
         widgets = {
             'source': forms.Textarea(attrs={
