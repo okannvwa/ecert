@@ -5,7 +5,7 @@
 {% block content %}
 <h2>{% if form.instance.pk %}Edit Task{% else %}New Task{% endif %}</h2>
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.non_field_errors }}
     
@@ -27,7 +27,10 @@
         {{ form.assigned_employee.label_tag }} {{ form.assigned_employee }}
     </div>
     {% endif %}
-    
+
+    <div class="form-group">
+        {{ form.file.label_tag }} {{ form.file }}
+    </div>
     <div class="form-group">
         {{ form.source.label_tag }} {{ form.source }}
     </div>

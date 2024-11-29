@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Task, TaskStatus, ColumnStatus, PriorityChoices, Comment
 from .forms import TaskForm, CommentForm
 from django.db.models import Case, When, Value, IntegerField
+from .utils import has_permission_for_task
 
 def kanban_board(request):
     # Get filter options from GET parameters
@@ -38,6 +39,8 @@ def kanban_board(request):
     # Get distinct sector options for dropdown
     sector_choices = Task.objects.values_list('sector', flat=True).distinct()
 
+    can_add_task = request.user.is_superuser or request.user.groups.filter(name="Team Expertise").exists()
+
     context = {
         'expertise_tasks': expertise_tasks,
         'contentbeheer_tasks': contentbeheer_tasks,
@@ -45,6 +48,7 @@ def kanban_board(request):
         'sector_choices': sector_choices,
         'selected_sector': sector_filter,
         'my_tasks_only': my_tasks_only,
+        'can_add_task': can_add_task,
     }
     return render(request, 'kanban_board.html', context)
 
@@ -66,13 +70,20 @@ def view_task(request, task_id):
     else:
         comment_form = CommentForm()
 
+    user_has_permission = has_permission_for_task(request.user, task)
+
     context = {
         'task': task,
         'comments': comments,
         'comment_form': comment_form,
+        'user_has_permission': user_has_permission, 
     }
     return render(request, 'view_task.html', context)
 
+def is_team_expertise(user):
+    return user.groups.filter(name="Team Expertise").exists() or user.is_superuser
+
+@user_passes_test(is_team_expertise)
 def add_task(request):
     if request.method == 'POST':
         form = TaskForm(request.POST)
@@ -87,11 +98,12 @@ def add_task(request):
 
 def edit_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
+    if not has_permission_for_task(request.user, task):
+        return HttpResponseForbidden("You don't have permission to edit this task.")
     if request.method == 'POST':
         form = TaskForm(request.POST, instance=task)
         if form.is_valid():
             updated_task = form.save(commit=False)
-            # Controleer of de kolom is gewijzigd
             if updated_task.column != task.column:
                 updated_task.assigned_employee = None  # Reset medewerker als de kolom verandert
             updated_task.save()
@@ -124,6 +136,8 @@ def unarchive_task(request, task_id):
 
 def move_task(request, task_id, direction):
     task = get_object_or_404(Task, id=task_id)
+    if not has_permission_for_task(request.user, task):
+        return HttpResponseForbidden("You don't have permission to move this task.")
 
     if direction == 'next':
         if task.column == ColumnStatus.EXPERTISE:

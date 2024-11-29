@@ -12,6 +12,16 @@
     <p><strong>Assigned Employee:</strong> {% if task.assigned_employee != None %} {{ task.assigned_employee }} {% endif %}
     <p><strong>Source:</strong> {{ task.source }}</p>
     <p><strong>Coverages:</strong> {{ task.coverages }}</p>
+    <p><strong>Landeneisen Document:</strong>
+    {% if task.file %}
+        <br>
+        <a href="{{ task.file.url }}" target="_blank" class="btn btn-info">View File</a>
+        <a href="{{ task.file.url }}" download class="btn btn-secondary">Download File</a>
+    {% else %}
+        No file attached.
+    {% endif %}
+    </p>
+
 
     {% if task.archived %}
         <form action="{% url 'unarchive_task' task.id %}" method="post" style="display:inline;">
@@ -27,21 +37,19 @@
         <br>
         <a href="{% url 'archive' %}" class="btn btn-secondary">Back to Archive</a>
     {% else %}
-        <a href="{% url 'edit_task' task.id %}" class="btn btn-primary">Edit</a>
-        <form action="{% url 'archive_task' task.id %}" method="post" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-warning">Archive Task</button>
-        </form>
-        <br>
-        <br>
-        {% if task.column == "expertise" %}
-            <a href="{% url 'move_task' task.id 'next' %}" class="btn btn-primary">Move to Contentbeheer</a>
-        {% elif task.column == "contentbeheer" %}
-            <a href="{% url 'move_task' task.id 'previous' %}" class="btn btn-secondary">Move to Expertise</a>
-            <a href="{% url 'move_task' task.id 'next' %}" class="btn btn-primary">Move to Notificeren</a>
-        {% elif task.column == "notificeren" %}
-            <a href="{% url 'move_task' task.id 'previous' %}" class="btn btn-secondary">Move to Contentbeheer</a>
+        {% if user_has_permission %}
+            <a href="{% url 'edit_task' task.id %}" class="btn btn-primary">Edit</a>
+            <a href="{% url 'archive_task' task.id %}" class="btn btn-warning">Archive Task</a>
+            {% if task.column == "expertise" %}
+                <a href="{% url 'move_task' task.id 'next' %}" class="btn btn-primary">Move to Contentbeheer</a>
+            {% elif task.column == "contentbeheer" %}
+                <a href="{% url 'move_task' task.id 'previous' %}" class="btn btn-secondary">Move to Expertise</a>
+                <a href="{% url 'move_task' task.id 'next' %}" class="btn btn-primary">Move to Notificeren</a>
+            {% elif task.column == "notificeren" %}
+                <a href="{% url 'move_task' task.id 'previous' %}" class="btn btn-secondary">Move to Contentbeheer</a>
+            {% endif %}
         {% endif %}
+    {% endif %}
         <br><br>
         <h3>Comments</h3>
         <div class="comments-section">
@@ -52,10 +60,11 @@
                 </div>
                 <hr>
             {% empty %}
-                <p>No comments yet. Be the first to comment!</p>
+                <p>Geen comments tot nu toe</p>
             {% endfor %}
         </div>
-        
+
+    {% if not task.archived %}
         <h3>Add a Comment</h3>
         <form method="post">
             {% csrf_token %}

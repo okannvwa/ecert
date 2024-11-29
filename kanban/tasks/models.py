@@ -58,6 +58,7 @@ class Task(models.Model):
     coverages = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     archived = models.BooleanField(default=False)
+    file = models.FileField(upload_to='task_files/', blank=True, null=True)
 
     def __str__(self):
         return f"{self.country} - {self.sector} - {self.priority}"

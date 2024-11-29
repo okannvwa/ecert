@@ -10,11 +10,10 @@
             <div class="col-lg-3 mt-3">
                 <h3>Instellingen</h3>
                 <div class="align-items-end settings-column p-3">
-                    <!-- Button to Create New Task -->
-                    <a href="{% url 'add_task' %}" class="btn btn-primary mb-3"><i class="fa fa-plus-circle"></i> Nieuwe taak</a>
-                    <br>
-                    
-                    <!-- Button to View Archive -->
+                    {% if can_add_task %}
+                        <a href="{% url 'add_task' %}" class="btn btn-primary mb-3"><i class="fa fa-plus-circle"></i> Nieuwe taak</a>
+                        <br>
+                    {% endif %}
                     <a href="{% url 'archive' %}" class="btn btn-secondary mb-3"><i class="fa fa-folder"></i> Archief</a>
                     <br>
                     
