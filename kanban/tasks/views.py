@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Task, TaskStatus, ColumnStatus, PriorityChoices
-from .forms import TaskForm
+from .models import Task, TaskStatus, ColumnStatus, PriorityChoices, Comment
+from .forms import TaskForm, CommentForm
 from django.db.models import Case, When, Value, IntegerField
 
 def kanban_board(request):
@@ -53,7 +53,25 @@ def kanban_board(request):
 @login_required
 def view_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
-    return render(request, 'view_task.html', {'task': task})
+    comments = task.comments.all().order_by('-created_at')
+
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.task = task
+            comment.user = request.user
+            comment.save()
+            return redirect('view_task', task_id=task.id)
+    else:
+        comment_form = CommentForm()
+
+    context = {
+        'task': task,
+        'comments': comments,
+        'comment_form': comment_form,
+    }
+    return render(request, 'view_task.html', context)
 
 def add_task(request):
     if request.method == 'POST':

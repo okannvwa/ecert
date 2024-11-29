@@ -12,13 +12,13 @@ class ColumnStatus(models.TextChoices):
     NOTIFICEREN = 'notificeren', 'Notificeren'
 
 class SectorChoices(models.TextChoices):
-    AARDAPPELEN = 'aardappelen', 'Aardappelen'
-    BLOEMBOLLEN = 'bloembollen', 'Bloembollen'
-    DIVERS = 'divers', 'Diverse Producten'
-    GROENTEENFRUIT = 'groenteenfruit', 'Groente en Fruit'
-    PLANTUIEN = 'plantuien', 'Plantuien, Sjalotten, Knoflook'
-    SIERTEELT = 'sierteelt', 'Sierteelt, Boomkwekerij en Fruitgewassen'
-    ZAAIZADEN = 'zaaizaden', 'Zaaizaden'
+    AARDAPPELEN = 'Aardappelen', 'Aardappelen'
+    BLOEMBOLLEN = 'Bloembollen', 'Bloembollen'
+    DIVERS = 'Diverse Producten', 'Diverse Producten'
+    GROENTEENFRUIT = 'Groente en Fruit', 'Groente en Fruit'
+    PLANTUIEN = 'Plantuien, Sjalotten, Knoflook', 'Plantuien, Sjalotten, Knoflook'
+    SIERTEELT = 'Sierteelt, Boomkwekerij en Fruitgewassen', 'Sierteelt, Boomkwekerij en Fruitgewassen'
+    ZAAIZADEN = 'Zaaizaden', 'Zaaizaden'
 
 class PriorityChoices(models.TextChoices):
     HIGH = 'high', 'High'
@@ -28,7 +28,7 @@ class PriorityChoices(models.TextChoices):
 class Task(models.Model):
     country = models.CharField(max_length=100, default="")
     sector = models.CharField(
-        max_length=20,
+        max_length=40,
         choices=SectorChoices.choices,
         default=SectorChoices.ZAAIZADEN
     )
@@ -61,3 +61,12 @@ class Task(models.Model):
 
     def __str__(self):
         return f"{self.country} - {self.sector} - {self.priority}"
+
+class Comment(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Comment by {self.user.username} on {self.created_at}"

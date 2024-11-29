@@ -1,5 +1,5 @@
 from django import forms
-from .models import Task
+from .models import Task, Comment
 
 class TaskForm(forms.ModelForm):
     class Meta:
@@ -30,3 +30,14 @@ class TaskForm(forms.ModelForm):
                 required=False,
                 label="Assigned Employee"
             )
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={
+                'placeholder': 'Add your comment here...',
+                'rows': 3
+            }),
+        }
