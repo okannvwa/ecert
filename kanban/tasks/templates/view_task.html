@@ -4,11 +4,12 @@
 
 {% block content %}
     <h2>Task Details</h2>
+    <p><strong>Column:</strong> {{ task.get_column_display }}</p>
     <p><strong>Country:</strong> {{ task.country }}</p>
     <p><strong>Sector:</strong> {{ task.sector }}</p>
+    <p><strong>Priority:</strong> {{ task.priority }}</p>
     <p><strong>Status:</strong> {{ task.get_status_display }}</p>
-    <p><strong>Column:</strong> {{ task.get_column_display }}</p>
-    <p><strong>Assigned Employee:</strong> {{ task.assigned_employee }}</p>
+    <p><strong>Assigned Employee:</strong> {% if task.assigned_employee != None %} {{ task.assigned_employee }} {% endif %}
     <p><strong>Source:</strong> {{ task.source }}</p>
     <p><strong>Coverages:</strong> {{ task.coverages }}</p>
 

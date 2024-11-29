@@ -11,7 +11,8 @@
 </head>
 <body>
     <header class="header">
-        <h1>Kanban Board: Exportcertificering</h1>
+        <img src="{% static 'nvwa_logo.svg'%}" alt="NVWA logo">
+        <h1 style="text-align: center;">Kanban Board: Exportcertificering</h1>
         <div class="user-info">
             <span class="user-name">{{ user.username }}</span>
             {% if user.groups.all %}
@@ -25,9 +26,11 @@
         </div>
     </header>
 
+    <br>
     <div class="container">
         {% block content %}
         {% endblock %}
     </div>
+    <br>
 </body>
 </html>

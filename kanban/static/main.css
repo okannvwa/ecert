@@ -51,6 +51,10 @@
     background-color: #01689b;
 }
 
+.settings-column{
+    border: #000 solid 1px;
+}
+
 .task{
     margin: 5px;
     margin-bottom: 1em;
