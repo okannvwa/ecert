@@ -12,11 +12,11 @@ class TaskForm(forms.ModelForm):
         ]
         widgets = {
             'source': forms.Textarea(attrs={
-                'placeholder': 'Optional: Can be filled in later.',
+                'placeholder': 'Optioneel: Kan later ingevuld worden.',
                 'rows': 3
             }),
             'coverages': forms.Textarea(attrs={
-                'placeholder': 'Optional: Can be filled in later.',
+                'placeholder': 'Optioneel: Kan later ingevuld worden.',
                 'rows': 3
             }),
         }
@@ -55,7 +55,7 @@ class CommentForm(forms.ModelForm):
         fields = ['content']
         widgets = {
             'content': forms.Textarea(attrs={
-                'placeholder': 'Add your comment here...',
+                'placeholder': 'Voeg uw comment hier toe...',
                 'rows': 3
             }),
         }

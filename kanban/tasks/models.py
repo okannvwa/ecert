@@ -2,9 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class TaskStatus(models.TextChoices):
-    TODO = 'todo', 'To Do'
-    DOING = 'doing', 'Doing'
-    WAITING = 'waiting', 'Waiting'
+    TODO = 'Te Doen', 'Te Doen'
+    DOING = 'Mee Bezig', 'Mee Bezig'
+    WAITING = 'In Afwachting', 'In Afwachting'
 
 class ColumnStatus(models.TextChoices):
     EXPERTISE = 'expertise', 'Expertise'
@@ -16,14 +16,14 @@ class SectorChoices(models.TextChoices):
     BLOEMBOLLEN = 'Bloembollen', 'Bloembollen'
     DIVERS = 'Diverse Producten', 'Diverse Producten'
     GROENTEENFRUIT = 'Groente en Fruit', 'Groente en Fruit'
-    PLANTUIEN = 'Plantuien, Sjalotten, Knoflook', 'Plantuien, Sjalotten, Knoflook'
-    SIERTEELT = 'Sierteelt, Boomkwekerij en Fruitgewassen', 'Sierteelt, Boomkwekerij en Fruitgewassen'
+    PLANTUIEN = 'Plantuien', 'Plantuien'
+    SIERTEELT = 'Sierteelt', 'Sierteelt'
     ZAAIZADEN = 'Zaaizaden', 'Zaaizaden'
 
 class PriorityChoices(models.TextChoices):
-    HIGH = 'high', 'High'
-    MEDIUM = 'medium', 'Medium'
-    LOW = 'low', 'Low'
+    HIGH = 'Hoog', 'Hoog'
+    MEDIUM = 'Gemiddeld', 'Gemiddeld'
+    LOW = 'Laag', 'Laag'
 
 class Task(models.Model):
     country = models.CharField(max_length=100, default="")
@@ -33,7 +33,7 @@ class Task(models.Model):
         default=SectorChoices.ZAAIZADEN
     )
     status = models.CharField(
-        max_length=10,
+        max_length=15,
         choices=TaskStatus.choices,
         default=TaskStatus.TODO
     )

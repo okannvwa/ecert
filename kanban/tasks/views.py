@@ -125,6 +125,7 @@ def archive(request):
 def archive_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     task.archived = True
+    task.status = TaskStatus.TODO
     task.save()
     return redirect('kanban_board')
 

@@ -3,22 +3,24 @@
 {% block title %}Task Details{% endblock %}
 
 {% block content %}
-    <h2>Task Details</h2>
-    <p><strong>Column:</strong> {{ task.get_column_display }}</p>
-    <p><strong>Country:</strong> {{ task.country }}</p>
+    <h2>Taak Details</h2>
+    <p><strong>Kolom:</strong> {{ task.get_column_display }}</p>
+    <p><strong>Land:</strong> {{ task.country }}</p>
     <p><strong>Sector:</strong> {{ task.sector }}</p>
-    <p><strong>Priority:</strong> {{ task.priority }}</p>
+    <p><strong>Prioriteit:</strong> {{ task.priority }}</p>
+    {% if not task.archived %}
     <p><strong>Status:</strong> {{ task.get_status_display }}</p>
-    <p><strong>Assigned Employee:</strong> {% if task.assigned_employee != None %} {{ task.assigned_employee }} {% endif %}
-    <p><strong>Source:</strong> {{ task.source }}</p>
-    <p><strong>Coverages:</strong> {{ task.coverages }}</p>
+    {% endif %}
+    <p><strong>Toegewezen Medewerker:</strong> {% if task.assigned_employee != None %} {{ task.assigned_employee }} {% endif %}
+    <p><strong>Bron:</strong> {{ task.source }}</p>
+    <p><strong>Dekkingseisen en -sets:</strong> {{ task.coverages }}</p>
     <p><strong>Landeneisen Document:</strong>
     {% if task.file %}
         <br>
         <a href="{{ task.file.url }}" target="_blank" class="btn btn-info">View File</a>
         <a href="{{ task.file.url }}" download class="btn btn-secondary">Download File</a>
     {% else %}
-        No file attached.
+        Geen document gevonden.
     {% endif %}
     </p>
 
@@ -26,27 +28,27 @@
     {% if task.archived %}
         <form action="{% url 'unarchive_task' task.id %}" method="post" style="display:inline;">
             {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Unarchive Task</button>
+            <button type="submit" class="btn btn-primary">Dearchiveer Taak</button>
         </form>
 
         <form action="{% url 'delete_task' task.id %}" method="post" style="display:inline;">
             {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Delete Task</button>
+            <button type="submit" class="btn btn-danger">Verwijder Taak</button>
         </form>
         <br>
         <br>
-        <a href="{% url 'archive' %}" class="btn btn-secondary">Back to Archive</a>
+        <a href="{% url 'archive' %}" class="btn btn-secondary">Terug naar Archief</a>
     {% else %}
         {% if user_has_permission %}
-            <a href="{% url 'edit_task' task.id %}" class="btn btn-primary">Edit</a>
-            <a href="{% url 'archive_task' task.id %}" class="btn btn-warning">Archive Task</a>
+            <a href="{% url 'edit_task' task.id %}" class="btn btn-primary">Bewerk Taak</a>
+            <a href="{% url 'archive_task' task.id %}" class="btn btn-warning">Archiveer Taak</a>
             {% if task.column == "expertise" %}
-                <a href="{% url 'move_task' task.id 'next' %}" class="btn btn-primary">Move to Contentbeheer</a>
+                <a href="{% url 'move_task' task.id 'next' %}" class="btn btn-primary">Verplaats naar Contentbeheer</a>
             {% elif task.column == "contentbeheer" %}
-                <a href="{% url 'move_task' task.id 'previous' %}" class="btn btn-secondary">Move to Expertise</a>
-                <a href="{% url 'move_task' task.id 'next' %}" class="btn btn-primary">Move to Notificeren</a>
+                <a href="{% url 'move_task' task.id 'previous' %}" class="btn btn-secondary">Verplaats naar Expertise</a>
+                <a href="{% url 'move_task' task.id 'next' %}" class="btn btn-primary">Verplaats naar Notificeren</a>
             {% elif task.column == "notificeren" %}
-                <a href="{% url 'move_task' task.id 'previous' %}" class="btn btn-secondary">Move to Contentbeheer</a>
+                <a href="{% url 'move_task' task.id 'previous' %}" class="btn btn-secondary">Verplaats naar Contentbeheer</a>
             {% endif %}
         {% endif %}
     {% endif %}
@@ -65,14 +67,13 @@
         </div>
 
     {% if not task.archived %}
-        <h3>Add a Comment</h3>
         <form method="post">
             {% csrf_token %}
             {{ comment_form.as_p }}
-            <button type="submit" class="btn btn-primary">Add Comment</button>
+            <button type="submit" class="btn btn-primary">Plaats Comment</button>
         </form>
         <br><br>
-        <a href="{% url 'kanban_board' %}" class="btn btn-secondary">Back to Homescreen</a>
+        <a href="{% url 'kanban_board' %}" class="btn btn-secondary">Terug naar het hoofdscherm</a>
     {% endif %}
 
 {% endblock %}
