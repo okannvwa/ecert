@@ -99,7 +99,7 @@ def add_task(request):
 def edit_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     if not has_permission_for_task(request.user, task):
-        return HttpResponseForbidden("You don't have permission to edit this task.")
+        return HttpResponseForbidden("U heeft geen toegang om deze taak te bewerken.")
     if request.method == 'POST':
         form = TaskForm(request.POST, instance=task)
         if form.is_valid():
@@ -138,7 +138,7 @@ def unarchive_task(request, task_id):
 def move_task(request, task_id, direction):
     task = get_object_or_404(Task, id=task_id)
     if not has_permission_for_task(request.user, task):
-        return HttpResponseForbidden("You don't have permission to move this task.")
+        return HttpResponseForbidden("U heeft geen toegang om deze taak te verplaatsen.")
 
     if direction == 'next':
         if task.column == ColumnStatus.EXPERTISE:
