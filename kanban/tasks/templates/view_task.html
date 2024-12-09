@@ -43,12 +43,12 @@
             <a href="{% url 'edit_task' task.id %}" class="btn btn-primary">Bewerk Taak</a>
             <a href="{% url 'archive_task' task.id %}" class="btn btn-warning">Archiveer Taak</a>
             {% if task.column == "expertise" %}
-                <a href="{% url 'move_task' task.id 'next' %}" class="btn btn-primary">Verplaats naar Contentbeheer</a>
+                <a href="{% url 'move_task' task.id 'next' %}" class="btn btn-primary" name="move-to-contentbeheer">Verplaats naar Contentbeheer</a>
             {% elif task.column == "contentbeheer" %}
-                <a href="{% url 'move_task' task.id 'previous' %}" class="btn btn-secondary">Verplaats naar Expertise</a>
-                <a href="{% url 'move_task' task.id 'next' %}" class="btn btn-primary">Verplaats naar Notificeren</a>
+                <a href="{% url 'move_task' task.id 'previous' %}" class="btn btn-secondary" name="move-to-expertise">Verplaats naar Expertise</a>
+                <a href="{% url 'move_task' task.id 'next' %}" class="btn btn-primary" name="move-to-notificeren">Verplaats naar Notificeren</a>
             {% elif task.column == "notificeren" %}
-                <a href="{% url 'move_task' task.id 'previous' %}" class="btn btn-secondary">Verplaats naar Contentbeheer</a>
+                <a href="{% url 'move_task' task.id 'previous' %}" class="btn btn-secondary" name="move-to-contentbeheer">Verplaats naar Contentbeheer</a>
             {% endif %}
         {% endif %}
     {% endif %}

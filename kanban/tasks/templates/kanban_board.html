@@ -7,7 +7,7 @@
     <div class="container">
         <div class="row">
             <!-- Settings Column -->
-            <div class="col-lg-3 mt-3">
+            <div class="col-lg-3 mt-3" name="settings-colomn">
                 <h3>Instellingen</h3>
                 <div class="align-items-end settings-column p-3">
                     {% if can_add_task %}
@@ -43,11 +43,11 @@
             </div>
 
             <!-- Expertise Column -->
-            <div class="col-lg-3 mt-3">
+            <div class="col-lg-3 mt-3" name="expertise-column">
                 <h3>Expertise</h3>
                 <ul class="list-group task-column">
                     {% for task in expertise_tasks %}
-                    <a href="{% url 'view_task' task.id %}" class="task">
+                    <a href="{% url 'view_task' task.id %}" class="task" id="{{ task.id }}">
                         <li class="list-group-item">
                             <strong>Land:</strong> {{ task.country }}<br>
                             <strong>Sector:</strong> {{ task.sector }}<br>
@@ -63,11 +63,11 @@
             </div>
 
             <!-- Contentbeheer Column -->
-            <div class="col-lg-3 mt-3">
+            <div class="col-lg-3 mt-3" name="contentbeheer-column">
                 <h3>Contentbeheer</h3>
                 <ul class="list-group task-column">
                     {% for task in contentbeheer_tasks %}
-                    <a href="{% url 'view_task' task.id %}" class="task">
+                    <a href="{% url 'view_task' task.id %}" class="task" id="{{ task.id }}">
                         <li class="list-group-item">
                             <strong>Land:</strong> {{ task.country }}<br>
                             <strong>Sector:</strong> {{ task.sector }}<br>
@@ -83,11 +83,11 @@
             </div>
 
             <!-- Notificeren Column -->
-            <div class="col-lg-3 mt-3">
+            <div class="col-lg-3 mt-3" name="notificeren-column">
                 <h3>Notificeren</h3>
                 <ul class="list-group task-column">
                     {% for task in notificeren_tasks %}
-                    <a href="{% url 'view_task' task.id %}" class="task">
+                    <a href="{% url 'view_task' task.id %}" class="task" id="{{ task.id }}">
                         <li class="list-group-item">
                             <strong>Land:</strong> {{ task.country }}<br>
                             <strong>Sector:</strong> {{ task.sector }}<br>

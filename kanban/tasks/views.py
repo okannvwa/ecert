@@ -6,6 +6,7 @@ from .forms import TaskForm, CommentForm
 from django.db.models import Case, When, Value, IntegerField
 from .utils import has_permission_for_task
 
+@login_required
 def kanban_board(request):
     # Get filter options from GET parameters
     sector_filter = request.GET.get('sector')
