@@ -9,8 +9,8 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body>
-    <header class="header">
+<body style="background-color: #f2f2f2;">
+    <header class="header" style="padding-top: 0px; padding-bottom: 0px;">
         <img src="{% static 'nvwa_logo.svg'%}" alt="NVWA logo">
         <h1 style="text-align: center;">Kanban Board: Exportcertificering</h1>
         <div class="user-info">
@@ -26,11 +26,7 @@
         </div>
     </header>
 
-    <br>
-    <div class="container">
-        {% block content %}
-        {% endblock %}
-    </div>
-    <br>
+    {% block content %}
+    {% endblock %}
 </body>
 </html>

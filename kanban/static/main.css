@@ -4,8 +4,9 @@
     justify-content: space-between;
     align-items: center;
     padding: 16px;
-    background-color: #01689b;
-    color: white;
+    background-color: white;
+    color: black;
+    box-shadow: 0 4px 2px -2px gray;
 }
 
 .user-info {
@@ -19,19 +20,18 @@
 }
 
 .user-group {
-    color: #bbb;
     font-size: 0.9em;
 }
 
 .logout-icon {
     margin-left: 12px;
     text-decoration: none;
-    color: #fff; /* Red color for logout */
+    color: #000;
 }
 
 .logout-icon:hover {
     text-decoration: underline;
-    color: #fff;
+    color: grey;
 }
 
 .btn-secondary {
@@ -52,17 +52,41 @@
 }
 
 .settings-column{
-    border: #000 solid 1px;
+    background-color: #01689b;
+    border-radius: 30px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.filter-expansion{
+    background-color: white;
+    border: 1px black solid;
+    padding: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.btn {
+    border-radius: 0px !important;
+    text-align: start !important;
+    padding: 20px !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
 }
 
 .task{
     margin: 5px;
     margin-bottom: 1em;
     color: #000;
+    background-color: #fff;
 }
 
 .task :hover{
     background-color: #007bff;
     text-decoration: none;
     color: #fff;
+}
+
+hr {
+    border-top: 1px dashed black !important;
 }
