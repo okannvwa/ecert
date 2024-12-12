@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,24 +10,32 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
+
 <body style="background-color: #f2f2f2;">
     <header class="header" style="padding-top: 0px; padding-bottom: 0px;">
+        {% if not user.is_authenticated %}
+        <img src="{% static 'nvwa_logo.svg'%}" alt="NVWA logo">
+        <h1 style="text-align: center; width: 100%; margin-right: 235px;">Kanban Board: Exportcertificering</h1>
+        {% else %}
         <img src="{% static 'nvwa_logo.svg'%}" alt="NVWA logo">
         <h1 style="text-align: center;">Kanban Board: Exportcertificering</h1>
-        <div class="user-info">
-            <span class="user-name">{{ user.username }}</span>
-            {% if user.groups.all %}
-                <span class="user-group">(
+        <div class="user-info row justify-content-end" style="margin-right: 20px;">
+            <div class="col-4">
+                    <bold>{{ user.username }}</bold>
+                    {% if user.groups.all %}<span class="user-group">
                     {% for group in user.groups.all %}
-                        {{ group.name }}{% if not forloop.last %}, {% endif %}
+                    {{ group.name }}
                     {% endfor %}
-                )</span>
+                    </span>
+                    {% endif %}
+            </div>
+            <a href="{% url 'logout' %}" class="logout-icon col-3" title="Logout"><i class="fa fa-sign-out fa-2x"></i></a>
             {% endif %}
-            <a href="{% url 'logout' %}" class="logout-icon" title="Logout"><i class="fa fa-sign-out"></i></a>
         </div>
     </header>
 
     {% block content %}
     {% endblock %}
 </body>
+
 </html>

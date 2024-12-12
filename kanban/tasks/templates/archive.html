@@ -1,18 +1,38 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Gearchiveerde Taken</h2>
-<ul class="list-group">
-    {% for task in archived_tasks %}
-        <a href="{% url 'view_task' task.id %}" class="task">
-            <li class="list-group-item">
-                <strong>Land:</strong> {{ task.country }}<br>
-                <strong>Sector:</strong> {{ task.sector }}<br>
-            </li>
+<div class="row" style="width: 95%;">
+    <div class="col-8 archive-column mt-3" style="margin-right: 0px;">
+        <h2 style="color: #01689b;">Archief</h2>
+        <table class="task-table mt-3">
+            <thead>
+                <tr>
+                    <th>Omschrijving</th>
+                    <th>Land</th>
+                    <th>Sector</th>
+                    <th>Gearchiveerd op</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in archived_tasks %}
+                <tr onclick="window.location.href='{% url 'view_task' task.id %}'">
+                    <td style="max-width: 200px;">{{ task.description }}</td>
+                    <td>{{ task.country }}</td>
+                    <td>{{ task.sector }}</td>
+                    <td>{{ task.date_archived }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align: center;">Geen gearchiveerde taken.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-3 mt-3 settings-column" name="settings-column" style="margin-right: 0px !important; margin-left: 30px;">
+        <a href="{% url 'kanban_board' %}" class="btn btn-light mb-3" style="width: 100%;">
+            <i class="fa fa-arrow-left"></i> Terug naar Hoofdscherm
         </a>
-    {% empty %}
-        <li class="list-group-item">Geen gearchiveerde taken.</li>
-    {% endfor %}
-</ul>
-<a href="{% url 'kanban_board' %}" class="btn btn-secondary">Terug naar Hoofdscherm</a>
+    </div>
+</div>
 {% endblock %}

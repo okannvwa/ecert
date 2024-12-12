@@ -21,11 +21,12 @@ from webdriver_manager.chrome import ChromeDriverManager
 class TaskFunctionTests(TestCase):
     def setUp(self):
         """Sets up test data for Task function tests."""
-        self.team_expertise = Group.objects.create(name="Team Expertise")
+        self.team_expertise = Group.objects.create(name="Expertise")
         self.expertise_user = User.objects.create_user(username="expert_user", password="testpass")
         self.expertise_user.groups.add(self.team_expertise)
 
         self.task = Task.objects.create(
+            description="Test",
             country="Netherlands",
             sector=SectorChoices.GROENTEENFRUIT,
             status=TaskStatus.TODO,
@@ -44,6 +45,7 @@ class TaskFunctionTests(TestCase):
     def test_create_task_function(self):
         """UT1: Test task creation via add_task view."""
         form_data = {
+            "description": "Test",
             "country": "Belgium",
             "sector": SectorChoices.GROENTEENFRUIT,
             "status": TaskStatus.TODO,
@@ -60,6 +62,7 @@ class TaskFunctionTests(TestCase):
     def test_edit_task_function(self):
         """UT2: Test task editing via edit_task view."""
         form_data = {
+            "description": self.task.status,
             "country": "Germany",
             "sector": SectorChoices.ZAAIZADEN,
             "status": self.task.status,
@@ -107,12 +110,13 @@ class TaskFunctionTests(TestCase):
 class TaskComponentTests(TestCase):
     def setUp(self):
         """Sets up test data for Task component tests."""
-        self.team_expertise = Group.objects.create(name="Team Expertise")
+        self.team_expertise = Group.objects.create(name="Expertise")
         self.expertise_user = User.objects.create_user(username="expert_user", password="testpass")
         self.expertise_user.groups.add(self.team_expertise)
         self.client.login(username="expert_user", password="testpass")
 
         self.unarchived_task = Task.objects.create(
+            description="Test",
             country="Netherlands",
             sector=SectorChoices.ZAAIZADEN,
             status=TaskStatus.TODO,
@@ -124,6 +128,7 @@ class TaskComponentTests(TestCase):
             archived=False,
         )
         self.archived_task = Task.objects.create(
+            description="Test",
             country="Germany",
             sector=SectorChoices.DIVERS,
             status=TaskStatus.WAITING,
@@ -140,8 +145,8 @@ class TaskComponentTests(TestCase):
         response = self.client.get(reverse('archive'))
         self.assertEqual(response.status_code, 200)
         content = response.content.decode()
-        self.assertIn("<strong>Land:</strong> Germany", content)
-        self.assertNotIn("<strong>Land:</strong> Netherlands", content)
+        self.assertIn(self.archived_task.country, content)
+        self.assertNotIn(self.unarchived_task.country, content)
 
     def test_get_specific_task(self):
         """CT2: Verify a specific task is fetched via API."""
@@ -149,6 +154,7 @@ class TaskComponentTests(TestCase):
         self.assertEqual(response.status_code, 200)
         content = response.content.decode()
         self.assertIn(self.unarchived_task.country, content)
+        self.assertIn(self.unarchived_task.source, content)
         self.assertNotIn(self.archived_task.country, content)
 
     def test_get_unarchived_tasks(self):
@@ -156,29 +162,28 @@ class TaskComponentTests(TestCase):
         response = self.client.get(reverse('kanban_board'))
         self.assertEqual(response.status_code, 200)
         content = response.content.decode()
-        self.assertIn("<strong>Land:</strong> Netherlands", content)
-        self.assertNotIn("<strong>Land:</strong> Germany", content)
+        self.assertIn(self.unarchived_task.country, content)
+        self.assertNotIn(self.archived_task.country, content)
 
 
 class CommentIntegrationTest(LiveServerTestCase):
     def setUp(self):
         """Sets up the Selenium WebDriver and task data for Comment integration test."""
-        # Set up ChromeOptions for headless mode
         chrome_options = Options()
-        chrome_options.add_argument("--headless")  # Run in headless mode
-        chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (not needed in headless)
-        chrome_options.add_argument("--window-size=1920x1080")  # Set window size to avoid issues with elements being off-screen
+        chrome_options.add_argument("--headless")  
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--window-size=1920x1080")
 
-        # Set up the WebDriver using webdriver_manager to handle chromedriver installation
-        service = Service(ChromeDriverManager().install())  # Correctly set up the service with the chromedriver path
-        self.browser = webdriver.Chrome(service=service, options=chrome_options)  # Use the options parameter here
+        service = Service(ChromeDriverManager().install())
+        self.browser = webdriver.Chrome(service=service, options=chrome_options)
 
 
-        self.team_expertise = Group.objects.create(name="Team Expertise")
+        self.team_expertise = Group.objects.create(name="Expertise")
         self.user = User.objects.create_user(username="testuser", password="testpassword")
         self.user.groups.add(self.team_expertise)
 
         self.task = Task.objects.create(
+            description="Test",
             country="Netherlands",
             sector=SectorChoices.ZAAIZADEN,
             status=TaskStatus.TODO,
@@ -232,10 +237,6 @@ class CommentIntegrationTest(LiveServerTestCase):
         move_button = self.browser.find_element(By.NAME, "move-to-contentbeheer")
         move_button.click()
 
-        WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.NAME, "contentbeheer-column"))
-        )
-
         contentbeheer_column = self.browser.find_element(By.NAME, "contentbeheer-column")
         tasks_in_contentbeheer = contentbeheer_column.find_elements(By.CSS_SELECTOR, "a.task")
         task_ids_in_contentbeheer = [task.get_attribute("id") for task in tasks_in_contentbeheer]
@@ -247,3 +248,47 @@ class CommentIntegrationTest(LiveServerTestCase):
         task_ids_in_expertise = [task.get_attribute("id") for task in tasks_in_expertise]
 
         self.assertNotIn(str(self.task.id), task_ids_in_expertise)
+
+    def test_login_success_daan(self):
+        """TC001: Test login with valid credentials and ensure the dashboard is displayed."""
+        self.login()
+        self.browser.get(f"{self.live_server_url}/")
+        time.sleep(2)
+
+        dashboard_column = self.browser.find_element(By.NAME, "settings-column")
+        self.assertTrue(dashboard_column.is_displayed())
+
+    def test_login_failure_daan(self):
+        """TC002: Test login with invalid credentials."""
+        self.browser.get(f"{self.live_server_url}/")
+        self.browser.find_element(By.NAME, "username").send_keys("wronguser")
+        self.browser.find_element(By.NAME, "password").send_keys("wrongpassword")
+        self.browser.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+
+        self.browser.get(f"{self.live_server_url}/")
+        time.sleep(2)
+
+        current_url = self.browser.current_url
+        self.assertIn("login", current_url)
+
+    def test_responsiveness_daan(self):
+        """TC003: Test the responsiveness of the web page across various screen sizes."""
+        screen_sizes = [
+            (1920, 1080),  # Desktop
+            (1366, 768),   # Small Desktop
+            (1024, 768),   # Tablet landscape
+            (768, 1024),   # Tablet portrait
+            (375, 667),    # Smartphone portrait
+            (667, 375)     # Smartphone landscape
+        ]
+
+        self.login()
+        self.browser.get(f"{self.live_server_url}/")
+        time.sleep(2)
+
+        for width, height in screen_sizes:
+            self.browser.set_window_size(width, height)
+            time.sleep(1)
+
+            dashboard_column = self.browser.find_element(By.NAME, "settings-column")
+            self.assertTrue(dashboard_column.is_displayed())

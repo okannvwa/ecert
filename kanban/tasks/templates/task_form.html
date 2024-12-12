@@ -3,42 +3,43 @@
 {% block title %}Task Form{% endblock %}
 
 {% block content %}
-<h2>{% if form.instance.pk %}Edit Task{% else %}New Task{% endif %}</h2>
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.non_field_errors }}
-    
-    <div class="form-group">
-        {{ form.country.label_tag }} {{ form.country }}
-    </div>
-    <div class="form-group">
-        {{ form.sector.label_tag }} {{ form.sector }}
-    </div>
-    <div class="form-group">
-        {{ form.status.label_tag }} {{ form.status }}
-    </div>
-    <div class="form-group">
-        {{ form.priority.label_tag }} {{ form.priority }}
-    </div>
-    
-    {% if form.fields.assigned_employee %}
-    <div class="form-group">
-        {{ form.assigned_employee.label_tag }} {{ form.assigned_employee }}
-    </div>
-    {% endif %}
+<div class="task-form mt-3 container" style="width: 100% !important;">
+    <form method="post" enctype="multipart/form-data" class="row">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        
+       <div class="col-6">
+            <h3 class="mb-4" style="color: #01689b;">Informatie</h3>
+            {% for field in form %}
+                {% if field.name != 'notes' and field.name != 'file' %}
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" style="font-weight: 600;" for="{{ field.id_for_label }}">
+                        {{ field.label }}:
+                    </label>
+                    <div class="col-sm-8">
+                        {{ field }}
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="col-6">
+            <h3 class="mb-3" style="color: #01689b;">Notities</h3>
+            <div class="form-group mb-5">
+                {{ form.notes }}
+            </div>
+            <h3 class="mb-3" style="color: #01689b;">Bestand toevoegen</h3>
+            <div class="form-group">
+                {{ form.file }}
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary mt-3" style="margin-left: 12px;"><i class="fa fa-check-circle-o"></i>  Opslaan & naar overzicht</button>
+        <a href="{% url 'kanban_board' %}" class="btn btn-light mt-3" style="margin-left: 12px; border: 2px #01689b solid !important; color: #01689b !important; background-color: white !important;">
+            <i class="fa fa-times-circle-o"></i>  Annuleren
+        </a>
+    </form>
+</div>
 
-    <div class="form-group">
-        {{ form.file.label_tag }} {{ form.file }}
-    </div>
-    <div class="form-group">
-        {{ form.source.label_tag }} {{ form.source }}
-    </div>
-    <div class="form-group">
-        {{ form.coverages.label_tag }} {{ form.coverages }}
-    </div>
-    
-    <button type="submit" class="btn btn-primary">Save Task</button>
-    <a href="{% url 'kanban_board' %}" class="btn btn-secondary">Cancel</a>
-</form>
 {% endblock %}

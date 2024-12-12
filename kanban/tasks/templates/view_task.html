@@ -3,77 +3,153 @@
 {% block title %}Task Details{% endblock %}
 
 {% block content %}
-    <h2>Taak Details</h2>
-    <p><strong>Kolom:</strong> {{ task.get_column_display }}</p>
-    <p><strong>Land:</strong> {{ task.country }}</p>
-    <p><strong>Sector:</strong> {{ task.sector }}</p>
-    <p><strong>Prioriteit:</strong> {{ task.priority }}</p>
+<div class="row mb-3" style="width: 100%;">
+    <div class="col-8 archive-column mt-3" style="margin-right: 0px;">
+        <h3 style="color: #01689b;">Informatie</h3>
+            <p><strong>{{ task.description }}</strong></p>
+            <div class="row">
+                <div class="col-6">
+                    <p>
+                        <span class="task-details-label">Status:</span>
+                        <span class="task-details-value">
+                            {% if not task.archived %}
+                                {{ task.get_status_display }}
+                            {% else %}
+                                Afgerond
+                            {% endif %}
+                        </span>
+                    </p>
+                    <p>
+                        <span class="task-details-label">Prioriteit:</span>
+                        <span class="task-details-value">{{ task.priority }}</span>
+                    </p>
+                    <p>
+                        <span class="task-details-label">Sector:</span>
+                        <span class="task-details-value">{{ task.sector }}</span>
+                    </p>
+                    <p>
+                        <span class="task-details-label">Medewerker(s):</span>
+                        <span class="task-details-value">
+                            {% if task.assigned_employee != None %}
+                                {{ task.assigned_employee }}
+                            {% endif %}
+                        </span>
+                    </p>
+                </div>
+                <div class="col-6">
+                    <p>
+                        <span class="task-details-label">Land (+regio):</span>
+                        <span class="task-details-value">{{ task.country }}</span>
+                    </p>
+                    <p>
+                        <span class="task-details-label">Bron:</span>
+                        <span class="task-details-value">{{ task.source }}</span>
+                    </p>
+                    <p>
+                        <span class="task-details-label">Dekkingscode(s):</span>
+                        <span class="task-details-value">{{ task.coverages }}</span>
+                    </p>
+                    <p>
+                        <span class="task-details-label">Bestand:</span>
+                        <span class="task-details-value">
+                            {% if task.file %}
+                                <a href="{{ task.file.url }}" target="_blank">Bekijk bestand</a>
+                            {% else %}
+                                Geen document gevonden.
+                            {% endif %}
+                        </span>
+                    </p>
+                </div>
+        </div>
+        <h3 class="mt-3" style="color: #01689b;">Notities</h3>
+        <div class="row">
+        <div class="mb-3 col-6">
+        <p>{% if task.notes%} {{ task.notes }}{% else %}Geen notities.{% endif %}</p>
+        </div>
+        <div class="mb-3 col-6">
+            <p>
+                <span class="task-details-label">Datum:</span>
+                <span class="task-details-value">{{ task.created_at | date }}</span>
+            </p>
+            {% if task.archived %}
+            <p>
+                <span class="task-details-label">Gearchiveerd op:</span>
+                <span class="task-details-value">{{ task.date_archived | date }}</span>
+            </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <hr style="border-top: 3px dashed #01689b;">
+    <h3 style="color: #01689b;">Opmerkingen</h3>
     {% if not task.archived %}
-    <p><strong>Status:</strong> {{ task.get_status_display }}</p>
+    <form method="post" class="mb-3">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ comment_form.content }}
+        </div>
+        <button type="submit" class="btn btn-primary">Plaatsen</button>
+    </form>
     {% endif %}
-    <p><strong>Toegewezen Medewerker:</strong> {% if task.assigned_employee != None %} {{ task.assigned_employee }} {% endif %}
-    <p><strong>Bron:</strong> {{ task.source }}</p>
-    <p><strong>Dekkingseisen en -sets:</strong> {{ task.coverages }}</p>
-    <p><strong>Landeneisen Document:</strong>
-    {% if task.file %}
-        <br>
-        <a href="{{ task.file.url }}" target="_blank" class="btn btn-info">View File</a>
-        <a href="{{ task.file.url }}" download class="btn btn-secondary">Download File</a>
-    {% else %}
-        Geen document gevonden.
-    {% endif %}
-    </p>
+    <div class="comments-section mt-4">
+        {% for comment in comments %}
+        <div class="comment mb-3 p-3 border rounded">
+            <p class="mb-1">
+                <i class="fa fa-user-circle-o" style="color: #01689b;"></i> 
+                <strong>{{ comment.user.username }}</strong>
+                <small class="text-muted">{{ comment.created_at }}</small>
+            </p>
+            <p class="mb-0">{{ comment.content }}</p>
+        </div>
+        <hr>
+        {% empty %}
+        <p class="text-muted">Geen opmerkingen tot nu toe</p>
+        {% endfor %}
+    </div>
+    
+    </div>
+    <div class="col-3 mt-3 settings-column" name="settings-column"
+        style="margin-right: 0px !important; margin-left: 30px;">
+        <a href="{% url 'kanban_board' %}" class="btn btn-light mb-3" style="width: 100%;"><i
+                class="fa fa-arrow-left"></i> Terug naar hoofdscherm</a>
+        {% if task.archived %}
+        <a href="{% url 'archive' %}" class="btn btn-light mb-3" style="width: 100%;"><i class="fa fa-arrow-left"></i>
+            Terug naar archief <i class="fa fa-history"></i></a>
 
-
-    {% if task.archived %}
         <form action="{% url 'unarchive_task' task.id %}" method="post" style="display:inline;">
             {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Dearchiveer Taak</button>
+            <button type="submit" class="btn btn-light mb-3" style="width: 100%;"><i class="fa fa-repeat"></i>
+                Herstellen</button>
         </form>
 
         <form action="{% url 'delete_task' task.id %}" method="post" style="display:inline;">
             {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Verwijder Taak</button>
+            <button type="submit" class="btn btn-danger mb-3" style="width: 100%;"><i class="fa fa-trash"></i>
+                Verwijderen</button>
         </form>
-        <br>
-        <br>
-        <a href="{% url 'archive' %}" class="btn btn-secondary">Terug naar Archief</a>
-    {% else %}
+        {% else %}
         {% if user_has_permission %}
-            <a href="{% url 'edit_task' task.id %}" class="btn btn-primary">Bewerk Taak</a>
-            <a href="{% url 'archive_task' task.id %}" class="btn btn-warning">Archiveer Taak</a>
-            {% if task.column == "expertise" %}
-                <a href="{% url 'move_task' task.id 'next' %}" class="btn btn-primary" name="move-to-contentbeheer">Verplaats naar Contentbeheer</a>
-            {% elif task.column == "contentbeheer" %}
-                <a href="{% url 'move_task' task.id 'previous' %}" class="btn btn-secondary" name="move-to-expertise">Verplaats naar Expertise</a>
-                <a href="{% url 'move_task' task.id 'next' %}" class="btn btn-primary" name="move-to-notificeren">Verplaats naar Notificeren</a>
-            {% elif task.column == "notificeren" %}
-                <a href="{% url 'move_task' task.id 'previous' %}" class="btn btn-secondary" name="move-to-contentbeheer">Verplaats naar Contentbeheer</a>
-            {% endif %}
+        <a href="{% url 'edit_task' task.id %}" class="btn btn-light mb-3" style="width: 100%;"><i
+                class="fa fa-pencil"></i> Kaart bewerken</a>
+        {% if task.column == "expertise" %}
+        <a href="{% url 'move_task' task.id 'next' %}" class="btn btn-light mb-3" style="width: 100%;"
+            name="move-to-contentbeheer"><i class="fa fa-toggle-right"></i> Verplaats
+            naar Contentbeheer</a>
+        {% elif task.column == "contentbeheer" %}
+        <a href="{% url 'move_task' task.id 'previous' %}" class="btn btn-light mb-3" style="width: 100%;"
+            name="move-to-expertise"><i class="fa fa-toggle-left"></i> Verplaats
+            naar Expertise</a>
+        <a href="{% url 'move_task' task.id 'next' %}" class="btn btn-light mb-3" style="width: 100%;"
+            name="move-to-notificeren"><i class="fa fa-toggle-right"></i> Verplaats naar
+            Gereed voor DPD</a>
+        {% elif task.column == "notificeren" %}
+        <a href="{% url 'move_task' task.id 'previous' %}" class="btn btn-light mb-3" style="width: 100%;"
+            name="move-to-contentbeheer"><i class="fa fa-toggle-left"></i> Verplaats naar Contentbeheer</a>
         {% endif %}
-    {% endif %}
-        <br><br>
-        <h3>Comments</h3>
-        <div class="comments-section">
-            {% for comment in comments %}
-                <div class="comment">
-                    <p><strong>{{ comment.user.username }}</strong> <small>{{ comment.created_at }}</small></p>
-                    <p>{{ comment.content }}</p>
-                </div>
-                <hr>
-            {% empty %}
-                <p>Geen comments tot nu toe</p>
-            {% endfor %}
-        </div>
-
-    {% if not task.archived %}
-        <form method="post">
-            {% csrf_token %}
-            {{ comment_form.as_p }}
-            <button type="submit" class="btn btn-primary">Plaats Comment</button>
-        </form>
-        <br><br>
-        <a href="{% url 'kanban_board' %}" class="btn btn-secondary">Terug naar Hoofdscherm</a>
-    {% endif %}
-
+        <a href="{% url 'archive_task' task.id %}" class="btn btn-light mb-3" style="width: 100%;"><i
+            class="fa fa-archive"></i> Archiveren</a>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

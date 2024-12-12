@@ -26,6 +26,11 @@ class PriorityChoices(models.TextChoices):
     LOW = 'Laag', 'Laag'
 
 class Task(models.Model):
+    description = models.CharField(
+        max_length=255,
+        blank=False,
+        null=False,
+    )
     country = models.CharField(max_length=100, default="")
     sector = models.CharField(
         max_length=40,
@@ -58,7 +63,15 @@ class Task(models.Model):
     coverages = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     archived = models.BooleanField(default=False)
+    date_archived = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
     file = models.FileField(upload_to='task_files/', blank=True, null=True)
+    notes = models.TextField(
+        blank=True,
+        help_text="Additional notes or details about the task."
+    )
 
     def __str__(self):
         return f"{self.country} - {self.sector} - {self.priority}"

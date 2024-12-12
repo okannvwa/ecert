@@ -5,6 +5,7 @@ from .models import Task, TaskStatus, ColumnStatus, PriorityChoices, Comment
 from .forms import TaskForm, CommentForm
 from django.db.models import Case, When, Value, IntegerField
 from .utils import has_permission_for_task
+from django.utils.timezone import now
 
 @login_required
 def kanban_board(request):
@@ -40,7 +41,7 @@ def kanban_board(request):
     # Get distinct sector options for dropdown
     sector_choices = Task.objects.values_list('sector', flat=True).distinct()
 
-    can_add_task = request.user.is_superuser or request.user.groups.filter(name="Team Expertise").exists()
+    can_add_task = request.user.is_superuser or request.user.groups.filter(name="Expertise").exists()
 
     context = {
         'expertise_tasks': expertise_tasks,
@@ -82,7 +83,7 @@ def view_task(request, task_id):
     return render(request, 'view_task.html', context)
 
 def is_team_expertise(user):
-    return user.groups.filter(name="Team Expertise").exists() or user.is_superuser
+    return user.groups.filter(name="Expertise").exists() or user.is_superuser
 
 @user_passes_test(is_team_expertise)
 def add_task(request):
@@ -108,7 +109,7 @@ def edit_task(request, task_id):
             if updated_task.column != task.column:
                 updated_task.assigned_employee = None  # Reset medewerker als de kolom verandert
             updated_task.save()
-            return redirect('kanban_board')
+            return redirect('view_task', task_id=task.id)
     else:
         form = TaskForm(instance=task)
     return render(request, 'task_form.html', {'form': form, 'task': task})
@@ -120,19 +121,22 @@ def delete_task(request, task_id):
 
 @login_required
 def archive(request):
-    archived_tasks = Task.objects.filter(archived=True)
+    archived_tasks = Task.objects.filter(archived=True).order_by('-date_archived')
     return render(request, 'archive.html', {'archived_tasks': archived_tasks})
 
 def archive_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     task.archived = True
     task.status = TaskStatus.TODO
+    task.assigned_employee = None
+    task.date_archived = now()
     task.save()
-    return redirect('kanban_board')
+    return redirect('archive')
 
 def unarchive_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     task.archived = False
+    task.date_archived = None
     task.save()
     return redirect('kanban_board')
 

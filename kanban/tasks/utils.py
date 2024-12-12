@@ -5,8 +5,8 @@ def has_permission_for_task(user, task):
     """
     if user.is_superuser:
         return True
-    if task.column in ['expertise', 'notificeren'] and user.groups.filter(name="Team Expertise").exists():
+    if task.column in ['expertise', 'notificeren'] and user.groups.filter(name="Expertise").exists():
         return True
-    if task.column == 'contentbeheer' and user.groups.filter(name="Team Contentbeheer").exists():
+    if task.column == 'contentbeheer' and user.groups.filter(name="Contentbeheer").exists():
         return True
     return False
