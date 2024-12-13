@@ -85,6 +85,7 @@ USE_SQLITE=True
 ### Step 5: Apply Migrations
 ```
 # Apply database migrations
+cd /kanban
 python manage.py migrate
 ```
 
@@ -109,7 +110,6 @@ For testing role-specific functionalities, you need to:
 ### Step 8: Run the Development Server
 ```
 # Start the local development server
-cd /kanban
 python manage.py runserver
 ```
 Visit http://127.0.0.1:8000/ in your web browser to access the application.
