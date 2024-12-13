@@ -9,6 +9,7 @@ click==8.1.7
 cloudpickle==3.0.0
 colorama==0.4.6
 comm==0.1.4
+coverage==7.6.9
 cryptography==41.0.5
 cycler==0.12.1
 cytoolz==0.12.0
