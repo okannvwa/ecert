@@ -29,7 +29,12 @@
                     </span>
                     {% endif %}
             </div>
-            <a href="{% url 'logout' %}" class="logout-icon col-3" title="Logout"><i class="fa fa-sign-out fa-2x"></i></a>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" title="Logout" class="btn">
+                    <i class="fa fa-sign-out fa-2x  logout-icon"></i>
+                </button>
+            </form>
             {% endif %}
         </div>
     </header>

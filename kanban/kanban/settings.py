@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Secret Key and Debug
 SECRET_KEY = config('SECRET_KEY', default='default-key')
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
 
 # Application definition
@@ -52,15 +52,15 @@ TEMPLATES = [
 WSGI_APPLICATION = "kanban.wsgi.application"
 
 # Database Configuration
-if os.getenv('USE_SQLITE', default='True') == 'True': # Local development
+if config('USE_SQLITE', default=True, cast=bool): # Local development
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-elif os.getenv('USE_POSTGRESQL_URL', default='False') == 'True': # Production database with Render
-    database_url = os.getenv('DATABASE_URL')
+elif config('USE_POSTGRESQL_URL', default=False, cast=bool): # Production database with Render
+    database_url = config('DATABASE_URL')
     DATABASES = {
         'default': dj_database_url.parse(database_url)
     }
