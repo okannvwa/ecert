@@ -91,5 +91,6 @@ webdriver_manager==4.0.2
 webencodings==0.5.1
 websocket-client==1.8.0
 wheel==0.41.2
+whitenoise==6.7.0
 Willow==1.6.2
 zipp==3.17.0
