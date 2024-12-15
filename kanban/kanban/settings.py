@@ -59,7 +59,7 @@ if config('USE_SQLITE', default=True, cast=bool): # Local development
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-elif config('USE_POSTGRESQL_URL', default=False, cast=bool): # Production database with Render
+elif config('USE_PRODUCTION_DB', default=False, cast=bool): # Production database with Render
     database_url = config('DATABASE_URL')
     DATABASES = {
         'default': dj_database_url.parse(database_url)
