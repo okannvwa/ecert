@@ -219,7 +219,7 @@ class CommentIntegrationTest(LiveServerTestCase):
         comment_box = self.browser.find_element(By.NAME, "content")
         comment_box.send_keys("This is a test comment.")
 
-        submit_button = self.browser.find_element(By.CSS_SELECTOR, "button[type='submit']")
+        submit_button = self.browser.find_element(By.CSS_SELECTOR, "button[name='comment-submit']")
         submit_button.click()
 
         time.sleep(1)
