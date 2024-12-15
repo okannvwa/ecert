@@ -52,14 +52,19 @@ TEMPLATES = [
 WSGI_APPLICATION = "kanban.wsgi.application"
 
 # Database Configuration
-if os.getenv('USE_SQLITE', 'True') == 'True':
+if os.getenv('USE_SQLITE', default='True') == 'True': # Local development
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-else:
+elif os.getenv('USE_POSTGRESQL_URL', default='False') == 'True': # Production database with Render
+    database_url = os.getenv('DATABASE_URL')
+    DATABASES = {
+        'default': dj_database_url.parse(database_url)
+    }
+else: # Testing with Github Actions
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -96,6 +101,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+# This production code might break development mode, so we check whether we're in DEBUG mode
+if not DEBUG:    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
