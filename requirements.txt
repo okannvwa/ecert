@@ -48,7 +48,6 @@ networkx==3.2.1
 oauthlib==3.2.2
 openpyxl==3.1.2
 packaging==23.2
-pandas==2.0.3
 parso==0.8.3
 partd==1.4.1
 pickleshare==0.7.5
@@ -80,12 +79,12 @@ sqlparse==0.4.4
 stack-data==0.6.2
 telepath==0.3.1
 threadpoolctl==2.2.0
-tqdm==4.66.1
 traitlets==5.13.0
 trio==0.26.2
 trio-websocket==0.11.1
 typing_extensions==4.11.0
 tzdata==2023.3
+uvicorn==0.33.0
 urllib3==2.0.7
 wcwidth==0.2.8
 webdriver_manager==4.0.2
