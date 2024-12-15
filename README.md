@@ -14,7 +14,7 @@ This application uses the following technologies:
 - Kanban-style board for task management.
 - User authentication and role-based access.
 - Integration with testing workflows using GitHub Actions.
-- Easy deployment using Render.
+- Deployment using Render.
 
 ## Run Locally
 Follow these steps to run the application locally. Before proceeding, ensure you have Python 3.8+ installed on your system.
@@ -73,15 +73,7 @@ Environment variables are managed using example files provided in the repository
 ```
 cp .env.example .env
 ```
-- For production, use .env.example.production as a base.
 
-Update the .env file with your specific configurations, e.g.:
-```
-SECRET_KEY=your-secret-key
-DEBUG=True
-ALLOWED_HOSTS=localhost,127.0.0.1
-USE_SQLITE=True
-```
 ### Step 5: Apply Migrations
 ```
 # Apply database migrations
@@ -123,11 +115,25 @@ GitHub Actions automatically runs these tests with every pull request to the mai
 
 ## Deployment
 The application is hosted temporarily on Render. Follow these steps to deploy:
-- Create an account on Render and set up a new web service.
-- Link the repository and configure the build settings.
-- Add the environment variables from the .env file.
-- Deploy the application.
-For detailed instructions, visit [Render’s documentation](https://render.com/docs/deploy-django).
+- Create an account on Render and set up a new free database.
+- Set up a free web app, link the repository and configure the build settings like so:
+    - Build command: ```pip install -r requirements.txt```
+    - Start command: 
+        - First time deploying (Adjust the superuser login and email to your liking): ```cd kanban && python manage.py migrate && python manage.py collectstatic --noinput && python manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'password')" && python -m gunicorn kanban.asgi:application -k uvicorn.workers.UvicornWorker``` 
+        - After the first deployment change the command to: ```cd kanban && python manage.py migrate && python manage.py collectstatic --noinput && python -m gunicorn kanban.asgi:application -k uvicorn.workers.UvicornWorker```
+        - The reason for a different command for the first time deploying is that the shell is behind a paywall. This workaround here is done to create an admin user once without using the shell.
+    - Add the environment variables:
+        - DATABASE_URL: {{ Your internal database url from your Render database }}
+        - ALLOWED_HOSTS: localhost,{{ Your webapp title }}.onrender.com
+        - DEBUG: False
+        - SECRET_KEY: {{ Click on the generate button or use your own generated key }}
+        - USE_SQLITE: False
+        - USE_PRODUCTION_DB: True
+- Deploy the application and see that it work on .
+- Log in to the admin panel and add the groups ```Expertise``` and ```Contentbeheer```.
+- Congrats, the application is now hosted ready for use!
+
+Some of my settings deviate from the Render documentation because of errors. If you're still interested in the official documentation, visit [Render’s documentation](https://render.com/docs/deploy-django).
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
