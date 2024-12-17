@@ -54,6 +54,9 @@ class TaskForm(forms.ModelForm):
                 'rows': 5,
                 'class': 'form-control w-100',
             }),
+            'file': forms.FileInput(attrs={
+                'class': 'w-100',
+            }),
         }
 
     def __init__(self, *args, **kwargs):
