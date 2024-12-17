@@ -21,7 +21,7 @@
                     </p>
                     <p>
                         <span class="task-details-label">Prioriteit:</span>
-                        <span class="task-details-value">{{ task.priority }}</span>
+                        <span class="task-details-value">{{ task.priority }} <i class="fa fa-flag task-priority-{{task.priority}}"></i></span>
                     </p>
                     <p>
                         <span class="task-details-label">Sector:</span>
@@ -124,7 +124,7 @@
 
         <form action="{% url 'delete_task' task.id %}" method="post" style="display:inline;">
             {% csrf_token %}
-            <button type="submit" class="btn btn-danger mb-3" style="width: 100%;"><i class="fa fa-trash"></i>
+            <button type="submit" class="btn btn-danger mb-3" style="width: 100%; background-color: #d9534f !important;"><i class="fa fa-trash"></i>
                 Verwijderen</button>
         </form>
         {% else %}
