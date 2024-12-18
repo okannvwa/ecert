@@ -88,8 +88,8 @@
                     <a href="{% url 'view_task' task.id %}" class="task" id="{{ task.id }}">
                         <div class="task-header">
                             <p style="align-self: start;">
-                                <span class="task-country">{{ task.country }}</span><br>
-                                {{ task.description }}
+                                {{ task.country }}<br>
+                                <span class="task-description">{{ task.description }}</span>
                             </p>
                             <p class="task-priority-status">
                                 <span class="task-priority-status-blocks prio">Prioriteit <i class="fa fa-flag task-priority-{{task.priority}}"></i></span><br><br>
@@ -122,8 +122,8 @@
                     <a href="{% url 'view_task' task.id %}" class="task" id="{{ task.id }}">
                         <div class="task-header">
                             <p style="align-self: start;">
-                                <span class="task-country">{{ task.country }}</span><br>
-                                {{ task.description }}
+                                {{ task.country }}<br>
+                                <span class="task-description">{{ task.description }}</span>
                             </p>
                             <p class="task-priority-status">
                                 <span class="task-priority-status-blocks prio">Prioriteit <i class="fa fa-flag task-priority-{{task.priority}}"></i></span><br><br>
