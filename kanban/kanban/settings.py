@@ -70,10 +70,10 @@ else: # Testing with Github Actions
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('DB_NAME'),
+            'NAME': 'e-cert-database',
             'USER': os.getenv('DB_USER'),
             'PASSWORD': os.getenv('DB_PASSWORD'),
-            'HOST': os.getenv('DB_HOST', 'localhost'),
+            'HOST': 'e-cert-database.postgres.database.azure.com',
             'PORT': os.getenv('DB_PORT', '5432'),
         }
     }
