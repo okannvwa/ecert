@@ -61,10 +61,16 @@ if config('USE_SQLITE', default=True, cast=bool): # Local development
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-elif config('USE_PRODUCTION_DB', default=False, cast=bool): # Production database with Render
-    database_url = config('DATABASE_URL')
+elif config('USE_PRODUCTION_DB', default=False, cast=bool): # Production database Azure
     DATABASES = {
-        'default': dj_database_url.parse(database_url)
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('DB_NAME'),
+            'USER': config('DB_USER'),
+            'PASSWORD': config('SECRET_KEY'),
+            'HOST': config('DATABASE_URL'),
+            'PORT': os.getenv('DB_PORT', '5432'),
+        }
     }
 else: # Testing with Github Actions
     DATABASES = {
