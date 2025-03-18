@@ -8,8 +8,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Secret Key and Debug
 SECRET_KEY = config('SECRET_KEY', default='default-key')
-DEBUG = config('DEBUG', default=True, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
+DEBUG = False
+ALLOWED_HOSTS = "e-cert-gjhxcgbwcth7d9ac.westeurope-01.azurewebsites.net"
 
 # Application definition
 INSTALLED_APPS = [
