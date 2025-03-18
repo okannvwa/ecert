@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Secret Key and Debug
 SECRET_KEY = config('SECRET_KEY', default='default-key')
 DEBUG = False
-ALLOWED_HOSTS = "e-cert-gjhxcgbwcth7d9ac.westeurope-01.azurewebsites.net"
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
 
 # Application definition
 INSTALLED_APPS = [
@@ -70,10 +70,10 @@ else: # Testing with Github Actions
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'e-cert-database',
+            'NAME': os.getenv('DB_NAME'),
             'USER': os.getenv('DB_USER'),
             'PASSWORD': os.getenv('DB_PASSWORD'),
-            'HOST': 'e-cert-database.postgres.database.azure.com',
+            'HOST': os.getenv('DB_HOST'),
             'PORT': os.getenv('DB_PORT', '5432'),
         }
     }
