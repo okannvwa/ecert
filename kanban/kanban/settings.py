@@ -65,10 +65,10 @@ elif config('USE_PRODUCTION_DB', default=False, cast=bool): # Production databas
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config('DB_NAME'),
-            'USER': config('DB_USER'),
-            'PASSWORD': config('SECRET_KEY'),
-            'HOST': config('DB_URL'),
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv('DB_HOST'),
             'PORT': os.getenv('DB_PORT', '5432'),
         }
     }
@@ -78,8 +78,8 @@ else: # Testing with Github Actions
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': os.getenv('DB_NAME'),
             'USER': os.getenv('DB_USER'),
-            'PASSWORD': os.getenv('SECRET_KEY'),
-            'HOST': os.getenv('DB_URL'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv('DB_HOST', 'localhost'),
             'PORT': os.getenv('DB_PORT', '5432'),
         }
     }
