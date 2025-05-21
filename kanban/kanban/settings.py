@@ -65,10 +65,10 @@ elif config('USE_PRODUCTION_DB', default=False, cast=bool): # Production databas
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config('AZURE_POSTGRESQL_NAME'),
-            'USER': config('AZURE_POSTGRESQL_USER'),
-            'PASSWORD': config('AZURE_POSTGRESQL_PASSWORD'),
-            'HOST': config('AZURE_POSTGRESQL_HOST'),
+            'NAME': config('DB_NAME'),
+            'USER': config('DB_USER'),
+            'PASSWORD': config('SECRET_KEY'),
+            'HOST': config('DB_URL'),
             'PORT': os.getenv('DB_PORT', '5432'),
         }
     }
@@ -76,10 +76,10 @@ else: # Testing with Github Actions
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('AZURE_POSTGRESQL_NAME'),
-            'USER': os.getenv('AZURE_POSTGRESQL_USER'),
-            'PASSWORD': os.getenv('AZURE_POSTGRESQL_PASSWORD'),
-            'HOST': os.getenv('AZURE_POSTGRESQL_HOST'),
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('SECRET_KEY'),
+            'HOST': os.getenv('DB_URL'),
             'PORT': os.getenv('DB_PORT', '5432'),
         }
     }
