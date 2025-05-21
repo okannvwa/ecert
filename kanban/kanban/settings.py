@@ -68,7 +68,7 @@ elif config('USE_PRODUCTION_DB', default=False, cast=bool): # Production databas
             'NAME': config('AZURE_POSTGRESQL_NAME'),
             'USER': config('AZURE_POSTGRESQL_USER'),
             'PASSWORD': config('AZURE_POSTGRESQL_PASSWORD'),
-            'HOST': config('AZURE_POSTGRESQL_URL'),
+            'HOST': config('AZURE_POSTGRESQL_HOST'),
             'PORT': os.getenv('DB_PORT', '5432'),
         }
     }
