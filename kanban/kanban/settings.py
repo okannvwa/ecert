@@ -113,6 +113,8 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 if not DEBUG:    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    
+CSRF_TRUSTED_ORIGINS = ['https://e-cert-gjhxcgbwcth7d9ac.westeurope-01.azurewebsites.net']
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
